@@ -76,6 +76,18 @@ chain <b id="r-chain"></b>
 <div id="toast"></div>
 <canvas id="fx"></canvas>
 <footer id="stats"></footer>
-<script src="game.js"></script>
+<script src="game.js?v=2"></script>
+<script>
+function bootfail(m){
+  var d=document.createElement("div");
+  d.setAttribute("style","position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99;background:rgba(4,14,9,.95);border:1px solid #ff2a6d;color:#ffb3c8;font-family:monospace;padding:16px 22px;font-size:12px;max-width:420px;line-height:1.8");
+  d.innerHTML="<b style='color:#ff2a6d'>BOOT FAILURE</b><br>"+m;
+  document.body.appendChild(d);
+}
+setTimeout(function(){
+  if(!window.__blL)bootfail("game.js never ran. Check the Network tab for a 404: wrong path, file name case (servers are case-sensitive), or stale cache.");
+  else if(!window.__bl)bootfail("game.js ran but its payload did not execute. Open the Console tab: a Content-Security-Policy header is probably blocking eval. Remove it for this site or allow 'unsafe-eval'.");
+},2500);
+</script>
 </body>
 </html>
