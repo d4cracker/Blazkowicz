@@ -3,43 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lights out</title>
+<title>blackout</title>
 <style>
-:root{--bg:#0b1020;--off:#151b2e;--on:#ffc65c;--accent:#6ee7ff}
+:root{--bg:#04080a;--off:#0a1410;--on:#00ff9c;--accent:#ff2a6d;--dim:#39544a}
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:radial-gradient(120vmax 120vmax at 50% 20%, #16203a 0%, var(--bg) 60%);
-color:#cdd6e4;font-family:"Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
-header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:13px;color:#8b98ad}
-.brand{font-weight:600;color:#e8eef7;font-size:15px}
-.hud span{margin-left:14px}
-header{padding-right:180px}
-#board{display:grid;gap:min(1.4vmin,10px);padding:min(2vmin,16px);background:#0e1426;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5), inset 0 0 0 1px #1e2a45}
-.tile{width:min(13vmin,84px);height:min(13vmin,84px);border-radius:12px;cursor:pointer;background:var(--off);border:1px solid #23304d;transition:background .18s, box-shadow .18s, transform .08s}
-.tile:active{transform:scale(.94)}
-.tile.on{background:var(--on);border-color:#ffdf9e;box-shadow:0 0 18px rgba(255,198,92,.55), inset 0 0 12px rgba(255,255,255,.35)}
+body{background:radial-gradient(120vmax 120vmax at 50% 15%, #08161a 0%, var(--bg) 60%);color:#9fd8bd;font-family:"Cascadia Mono","JetBrains Mono",Consolas,monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:13px;color:#5d8f78;z-index:8;padding-right:200px}
+.brand{position:relative;font-weight:700;color:#d9ffe9;font-size:15px;letter-spacing:3px;text-shadow:0 0 10px rgba(0,255,156,.8)}
+.brand::before{content:attr(data-t);position:absolute;left:2px;top:0;color:var(--accent);clip-path:inset(0 0 55% 0);animation:glitch 2.6s infinite}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:#4e7d67;font-weight:400}
+@keyframes glitch{0%,91%,100%{transform:none;opacity:0}92%{transform:translateX(-3px);opacity:.9}95%{transform:translateX(3px);opacity:.6}97%{opacity:0}}
+.hud span{margin-left:14px;color:#5d8f78}
+#rain{position:fixed;inset:0;z-index:0;opacity:.5;pointer-events:none}
+#panel{position:fixed;top:70px;left:14px;z-index:7;width:236px;font-size:10px;color:#4e7d67;line-height:1.8}
+#panel .box{border:1px solid #10281d;border-left:2px solid #0f5c3c;background:rgba(4,12,8,.85);padding:6px 10px;margin-bottom:8px}
+#panel b{color:#7fd6a9;font-weight:600}
+#log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#log .ok{color:#7fd6a9}
+#log .warn{color:var(--accent)}
+#log .err{color:#ff7096}
+#board{position:relative;z-index:2;display:grid;gap:min(1.6vmin,12px);padding:min(2.4vmin,20px);background:linear-gradient(rgba(4,12,8,.92),rgba(4,12,8,.92)),repeating-linear-gradient(0deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px);border:1px solid #0f3a28;border-radius:4px;box-shadow:0 0 40px rgba(0,255,156,.12), 0 20px 60px rgba(0,0,0,.7), inset 0 0 30px rgba(0,255,156,.05)}
+.tile{position:relative;width:min(13vmin,84px);height:min(13vmin,84px);cursor:pointer;clip-path:polygon(16% 0,84% 0,100% 16%,100% 84%,84% 100%,16% 100%,0 84%,0 16%);background:linear-gradient(160deg,#0d1c15 0%,var(--off) 55%,#060d0a 100%);transition:background .15s, transform .12s ease}
+.tile::before{content:"";position:absolute;inset:5px;border:1px dashed rgba(0,255,156,.16);clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%);pointer-events:none}
+.tile:hover{transform:translateY(-3px);background:linear-gradient(160deg,#143226 0%,#0d1f17 55%,#060d0a 100%)}
+.tile:active{transform:scale(.9)}
+.tile::after{content:"";position:absolute;left:20%;right:20%;top:14%;height:22%;border-radius:50%;background:radial-gradient(closest-side, rgba(255,255,255,.4), transparent);opacity:0;transition:opacity .25s;pointer-events:none}
+.tile.on{background:radial-gradient(120% 90% at 50% 15%, #c8ffe4 0%, var(--on) 55%, #008f5e 100%);animation:breathe 3.6s ease-in-out infinite;animation-delay:calc(var(--d,0)*-1ms)}
+.tile.on::before{border-color:rgba(0,30,15,.45)}
+.tile.on::after{opacity:1}
+@keyframes breathe{0%,100%{filter:drop-shadow(0 0 8px rgba(0,255,156,.65)) brightness(1)}50%{filter:drop-shadow(0 0 16px rgba(0,255,156,.95)) brightness(1.2)}}
 .tile.invite{animation:pulse 1.6s ease-in-out infinite}
 .tile.hint{animation:pulseHint 2.6s ease-in-out}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(110,231,255,0)}50%{box-shadow:0 0 26px rgba(110,231,255,.8);border-color:var(--accent)}}
-@keyframes pulseHint{0%,100%{box-shadow:0 0 0 rgba(110,231,255,0)}30%,60%{box-shadow:0 0 30px rgba(110,231,255,.9);border-color:var(--accent)}}
-#toast{position:fixed;bottom:56px;left:50%;transform:translateX(-50%) translateY(20px);max-width:min(90vw,480px);text-align:center;padding:10px 18px;border-radius:999px;background:rgba(20,28,48,.92);border:1px solid #2a3a5e;color:#e8eef7;font-size:14px;opacity:0;transition:opacity .35s, transform .35s;pointer-events:none}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;padding:10px;font-size:11px;color:#5f6d85}
-footer b{color:#93a3bd;font-weight:600}
-#controls{position:fixed;top:10px;right:14px;display:flex;gap:8px}
-#controls button{background:#182238;color:#9fb0c8;border:1px solid #2a3a5e;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer}
-#controls button:hover{color:#e8eef7;border-color:var(--accent)}
-#fx{position:fixed;inset:0;pointer-events:none}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 rgba(255,42,109,0))}50%{filter:drop-shadow(0 0 15px rgba(255,42,109,.95)) brightness(1.25)}}
+@keyframes pulseHint{0%,100%{filter:drop-shadow(0 0 0 rgba(255,42,109,0))}30%,60%{filter:drop-shadow(0 0 18px rgba(255,42,109,1)) brightness(1.3)}}
+#toast{position:fixed;bottom:56px;left:50%;transform:translateX(-50%) translateY(20px);z-index:8;max-width:min(90vw,480px);text-align:center;padding:10px 18px;border-radius:2px;background:rgba(4,14,9,.94);border:1px solid #0f5c3c;border-left:3px solid var(--on);color:#b8ffdd;font-size:13px;text-shadow:0 0 6px rgba(0,255,156,.4);opacity:0;transition:opacity .3s, transform .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);animation:toastjit .25s}
+@keyframes toastjit{0%{transform:translateX(calc(-50% - 2px))}40%{transform:translateX(calc(-50% + 2px))}100%{transform:translateX(-50%)}}
+#toast::before{content:"> ";color:var(--on)}
+footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:10px;font-size:11px;color:var(--dim);z-index:8}
+footer b{color:#7fd6a9;font-weight:600}
+#controls{position:fixed;top:10px;right:14px;display:flex;gap:8px;z-index:8}
+#controls button{background:#08130d;color:#5d8f78;border:1px solid #14382a;border-radius:2px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+#controls button:hover{color:#d9ffe9;border-color:var(--on);text-shadow:0 0 6px rgba(0,255,156,.6)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:6}
+@media (max-width:900px),(max-height:640px){#panel{display:none}}
 </style>
 </head>
 <body>
+<canvas id="rain"></canvas>
 <header>
-<div class="brand">lights out</div>
+<div class="brand" data-t="blackout">blackout<small>GF(2) BREACH PROTOCOL</small></div>
 <div class="hud"><span id="hud-board"></span><span id="hud-moves"></span><span id="hud-time"></span></div>
 </header>
 <div id="controls">
-<button id="btn-new">new board</button>
-<button id="btn-sound">sound on</button>
+<button id="btn-new">reset grid</button>
+<button id="btn-sound">audio on</button>
+</div>
+<div id="panel">
+<div class="box">
+seed <b id="r-seed"></b><br>
+key <b id="r-key"></b><br>
+rank <b id="r-rank"></b><br>
+hamming <b id="r-ham"></b><br>
+state <b id="r-hash"></b><br>
+chain <b id="r-chain"></b>
+</div>
+<div class="box" id="log"></div>
 </div>
 <div id="board"></div>
 <div id="toast"></div>
