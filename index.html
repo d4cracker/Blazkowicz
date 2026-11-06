@@ -13,8 +13,9 @@ body{overscroll-behavior:none;background:radial-gradient(120vmax 120vmax at 50% 
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px)}
 .no-js body>*{display:none}
 .ns{display:none}
-.no-js .ns{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d9ffe9;font-size:min(9vw,42px);letter-spacing:10px;text-shadow:0 0 16px rgba(0,255,156,.3)}
-.no-js .ns small{margin-top:22px;font-size:11px;letter-spacing:3px;color:#5d8f78;text-align:center;padding:0 24px;line-height:2}
+.no-js .ns{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.ns-sq{width:56px;height:56px;clip-path:polygon(16% 0,84% 0,100% 16%,100% 84%,84% 100%,16% 100%,0 84%,0 16%);background:linear-gradient(160deg,#0d1c15 0%,#0a1410 55%,#060d0a 100%);animation:nsblink 4.5s ease-in-out infinite}
+@keyframes nsblink{0%,70%,100%{background:linear-gradient(160deg,#0d1c15 0%,#0a1410 55%,#060d0a 100%);filter:none}76%,90%{background:radial-gradient(120% 90% at 50% 15%,#c8ffe4 0%,#00ff9c 55%,#008f5e 100%);filter:drop-shadow(0 0 14px rgba(0,255,156,.8))}}
 header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:13px;color:#5d8f78;z-index:8;padding-right:200px}
 .brand{position:relative;font-weight:700;color:#d9ffe9;font-size:15px;letter-spacing:3px;text-shadow:0 0 6px rgba(0,255,156,.3)}
 .brand small{display:block;font-size:8px;letter-spacing:2px;color:#4e7d67;font-weight:400}
@@ -96,7 +97,7 @@ footer{font-size:8px;padding:3px 6px}
 </style>
 </head>
 <body>
-<noscript><div class="ns">blackout<small>the terminal is dark. this protocol executes inside the browser and javascript has been disabled. restore the signal, then return.</small></div></noscript>
+<noscript><div class="ns"><div class="ns-sq"></div></div></noscript>
 <canvas id="rain"></canvas>
 <header>
 <div class="brand">blackout<small>GRID CONTAINMENT PROTOCOL // GF(2) // CLEARANCE: OPS</small></div>
