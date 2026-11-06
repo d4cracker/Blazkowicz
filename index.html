@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
+<script>document.documentElement.className="js";</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>blackout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>blackout // grid containment protocol</title>
 <style>
 :root{--bg:#04080a;--off:#0a1410;--on:#00ff9c;--accent:#ff2a6d;--dim:#39544a}
-*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:radial-gradient(120vmax 120vmax at 50% 15%, #08161a 0%, var(--bg) 60%);color:#9fd8bd;font-family:"Cascadia Mono","JetBrains Mono",Consolas,monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+body{overscroll-behavior:none;background:radial-gradient(120vmax 120vmax at 50% 15%, #08161a 0%, var(--bg) 60%);color:#9fd8bd;font-family:"Cascadia Mono","JetBrains Mono",Consolas,monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px)}
+.no-js body>*{display:none}
+.ns{display:none}
+.no-js .ns{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#d9ffe9;font-size:min(9vw,42px);letter-spacing:10px;text-shadow:0 0 16px rgba(0,255,156,.3)}
+.no-js .ns small{margin-top:22px;font-size:11px;letter-spacing:3px;color:#5d8f78;text-align:center;padding:0 24px;line-height:2}
 header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:13px;color:#5d8f78;z-index:8;padding-right:200px}
-.brand{position:relative;font-weight:700;color:#d9ffe9;font-size:15px;letter-spacing:3px;text-shadow:0 0 10px rgba(0,255,156,.8)}
-.brand::before{content:attr(data-t);position:absolute;left:2px;top:0;color:var(--accent);clip-path:inset(0 0 55% 0);animation:glitch 2.6s infinite}
-.brand small{display:block;font-size:9px;letter-spacing:2px;color:#4e7d67;font-weight:400}
-@keyframes glitch{0%,91%,100%{transform:none;opacity:0}92%{transform:translateX(-3px);opacity:.9}95%{transform:translateX(3px);opacity:.6}97%{opacity:0}}
+.brand{position:relative;font-weight:700;color:#d9ffe9;font-size:15px;letter-spacing:3px;text-shadow:0 0 6px rgba(0,255,156,.3)}
+.brand small{display:block;font-size:8px;letter-spacing:2px;color:#4e7d67;font-weight:400}
 .hud span{margin-left:14px;color:#5d8f78}
-#rain{position:fixed;inset:0;z-index:0;opacity:.5;pointer-events:none}
+#rain{position:fixed;inset:0;z-index:0;opacity:.32;pointer-events:none}
 #panel{position:fixed;top:70px;left:14px;z-index:7;width:236px;font-size:10px;color:#4e7d67;line-height:1.8}
 #panel .box{border:1px solid #10281d;border-left:2px solid #0f5c3c;background:rgba(4,12,8,.85);padding:6px 10px;margin-bottom:8px}
 #panel b{color:#7fd6a9;font-weight:600}
@@ -24,15 +27,17 @@ header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-be
 #log .ok{color:#7fd6a9}
 #log .warn{color:var(--accent)}
 #log .err{color:#ff7096}
-#board{position:relative;z-index:2;display:grid;gap:min(1.6vmin,12px);padding:min(2.4vmin,20px);background:linear-gradient(rgba(4,12,8,.92),rgba(4,12,8,.92)),repeating-linear-gradient(0deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px);border:1px solid #0f3a28;border-radius:4px;box-shadow:0 0 40px rgba(0,255,156,.12), 0 20px 60px rgba(0,0,0,.7), inset 0 0 30px rgba(0,255,156,.05)}
-.tile{position:relative;width:min(13vmin,84px);height:min(13vmin,84px);cursor:pointer;clip-path:polygon(16% 0,84% 0,100% 16%,100% 84%,84% 100%,16% 100%,0 84%,0 16%);background:linear-gradient(160deg,#0d1c15 0%,var(--off) 55%,#060d0a 100%);transition:background .15s, transform .12s ease}
+#board{position:relative;z-index:2;display:grid;gap:min(1.6vmin,12px);padding:min(2.4vmin,20px);transition:opacity .5s ease, filter .5s ease;background:linear-gradient(rgba(4,12,8,.92),rgba(4,12,8,.92)),repeating-linear-gradient(0deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,255,156,.07) 23px 24px);border:1px solid #0f3a28;border-radius:4px;box-shadow:0 0 30px rgba(0,255,156,.06), 0 20px 60px rgba(0,0,0,.7), inset 0 0 30px rgba(0,255,156,.02)}
+#board.dead{opacity:0;filter:blur(7px) brightness(.3)}
+#clown{position:fixed;inset:0;z-index:20;opacity:0;pointer-events:none;background:rgba(1,6,4,.92);transition:opacity .5s}
+#clown.show{opacity:1}
+.tile{position:relative;width:var(--ts,min(13vmin,84px));height:var(--ts,min(13vmin,84px));cursor:pointer;touch-action:manipulation;clip-path:polygon(16% 0,84% 0,100% 16%,100% 84%,84% 100%,16% 100%,0 84%,0 16%);background:linear-gradient(160deg,#0d1c15 0%,var(--off) 55%,#060d0a 100%);transition:background .15s, transform .12s ease}
 .tile::before{content:"";position:absolute;inset:5px;border:1px dashed rgba(0,255,156,.16);clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%);pointer-events:none}
-.tile:hover{transform:translateY(-3px);background:linear-gradient(160deg,#143226 0%,#0d1f17 55%,#060d0a 100%)}
+@media (hover:hover){.tile:hover{transform:translateY(-3px);background:linear-gradient(160deg,#143226 0%,#0d1f17 55%,#060d0a 100%)}}
 .tile:active{transform:scale(.9)}
 .tile::after{content:"";position:absolute;left:20%;right:20%;top:14%;height:22%;border-radius:50%;background:radial-gradient(closest-side, rgba(255,255,255,.4), transparent);opacity:0;transition:opacity .25s;pointer-events:none}
 .tile.on{background:radial-gradient(120% 90% at 50% 15%, #c8ffe4 0%, var(--on) 55%, #008f5e 100%);animation:breathe 3.6s ease-in-out infinite;animation-delay:calc(var(--d,0)*-1ms)}
 .tile.on::before{border-color:rgba(0,30,15,.45)}
-.tile.on::after{opacity:1}
 @keyframes breathe{0%,100%{filter:drop-shadow(0 0 8px rgba(0,255,156,.65)) brightness(1)}50%{filter:drop-shadow(0 0 16px rgba(0,255,156,.95)) brightness(1.2)}}
 .tile.invite{animation:pulse 1.6s ease-in-out infinite}
 .tile.hint{animation:pulseHint 2.6s ease-in-out}
@@ -45,36 +50,87 @@ header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-be
 footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:10px;font-size:11px;color:var(--dim);z-index:8}
 footer b{color:#7fd6a9;font-weight:600}
 #controls{position:fixed;top:10px;right:14px;display:flex;gap:8px;z-index:8}
-#controls button{background:#08130d;color:#5d8f78;border:1px solid #14382a;border-radius:2px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+#controls button{background:#08130d;color:#5d8f78;border:1px solid #14382a;border-radius:2px;padding:5px 12px;font-size:10px;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:1px}
 #controls button:hover{color:#d9ffe9;border-color:var(--on);text-shadow:0 0 6px rgba(0,255,156,.6)}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:6}
-@media (max-width:900px),(max-height:640px){#panel{display:none}}
+.dtitle{letter-spacing:2px;color:#2e4a3b;font-size:9px;margin-bottom:3px}
+#dossier{position:fixed;top:70px;right:14px;z-index:7;width:252px;font-size:9.5px;color:#4e7d67;line-height:1.7}
+#dossier .box{border:1px solid #10281d;border-right:2px solid #0f5c3c;background:rgba(4,12,8,.85);padding:6px 10px}
+#dos-list div{margin:3px 0;padding:2px 4px;border-left:1px solid #10281d}
+#dos-list .seal{cursor:pointer;color:#1d3529;letter-spacing:2px}
+#dos-list .seal:hover{color:#4c7a5f;text-shadow:0 0 6px rgba(0,255,156,.25)}
+#dos-list .open .k{color:#7fd6a9;letter-spacing:1px}
+#dos-list .open .v{color:#9fd8bd;display:block;font-size:9px;white-space:normal;word-break:break-all}
+#dos-hint{margin-top:6px;color:#2e4a3b;letter-spacing:1px}
+#dos-hint.done{color:var(--accent)}
+#term{position:fixed;inset:0;z-index:30;background:#010503;font-size:13px;line-height:1.6;color:#8fdcb4;padding:clamp(16px,4vh,48px) clamp(14px,4vw,64px);overflow-y:auto;transition:opacity .5s}
+#term.off{opacity:0;pointer-events:none}
+#term.dark{background:#000}
+#term .l{white-space:pre-wrap;word-break:break-word}
+#term .dim{color:#3f6b52}
+#term .warn{color:#d8b25a}
+#term .err{color:#ff7096}
+#term .ok{color:#d9ffe9;text-shadow:0 0 8px rgba(0,255,156,.4)}
+#term-line{display:flex;gap:8px;margin-top:6px}
+#term-ps{color:#7fd6a9;white-space:pre}
+#term-in{flex:1;min-width:0;background:transparent;border:0;outline:none;color:#d9ffe9;font:inherit;caret-color:#00ff9c}
+@media (max-width:620px){#term{font-size:10px;padding:12px 10px}}
+@media (max-width:900px),(max-height:640px){#panel,#dossier{display:none}}
+@media (max-width:620px){
+header{padding:8px 10px 0 12px;padding-right:150px;font-size:10px}
+.brand{font-size:12px;letter-spacing:2px}
+.brand small{font-size:7px}
+.hud span{margin-left:9px}
+#controls{top:6px;right:8px;gap:5px}
+#controls button{padding:4px 8px;font-size:9px}
+footer{font-size:8.5px;gap:7px;padding:5px 6px}
+#toast{bottom:64px;font-size:11px;max-width:84vw;padding:8px 14px}
+}
+@media (orientation:landscape) and (max-height:520px){
+header{padding-top:4px}
+footer{font-size:8px;padding:3px 6px}
+#toast{bottom:44px}
+}
 </style>
 </head>
 <body>
+<noscript><div class="ns">blackout<small>the terminal is dark. this protocol executes inside the browser and javascript has been disabled. restore the signal, then return.</small></div></noscript>
 <canvas id="rain"></canvas>
 <header>
-<div class="brand" data-t="blackout">blackout<small>GF(2) BREACH PROTOCOL</small></div>
+<div class="brand">blackout<small>GRID CONTAINMENT PROTOCOL // GF(2) // CLEARANCE: OPS</small></div>
 <div class="hud"><span id="hud-board"></span><span id="hud-moves"></span><span id="hud-time"></span></div>
 </header>
 <div id="controls">
-<button id="btn-new">reset grid</button>
+<button id="btn-new">abort grid</button>
 <button id="btn-sound">audio on</button>
 </div>
 <div id="panel">
 <div class="box">
-seed <b id="r-seed"></b><br>
-key <b id="r-key"></b><br>
-rank <b id="r-rank"></b><br>
-hamming <b id="r-ham"></b><br>
-state <b id="r-hash"></b><br>
-chain <b id="r-chain"></b>
+<div class="dtitle">TELEMETRY // LIVE</div>
+SEED <b id="r-seed"></b><br>
+KEY <b id="r-key"></b><br>
+RANK <b id="r-rank"></b><br>
+HAMMING <b id="r-ham"></b><br>
+STATE <b id="r-hash"></b><br>
+CHAIN <b id="r-chain"></b>
 </div>
 <div class="box" id="log"></div>
+</div>
+<div id="dossier">
+<div class="box">
+<div class="dtitle">SUBJECT DOSSIER &middot; <span id="dos-remain"></span></div>
+<div id="dos-list"></div>
+<div id="dos-hint">the subject resists interpretation. press a seal to read what it hides.</div>
+</div>
+</div>
+<div id="term">
+<div id="term-out"></div>
+<div id="term-line"><span id="term-ps"></span><input id="term-in" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
 </div>
 <div id="board"></div>
 <div id="toast"></div>
 <canvas id="fx"></canvas>
+<canvas id="clown"></canvas>
 <footer id="stats"></footer>
 <script src="game.js?v=2"></script>
 <script>
