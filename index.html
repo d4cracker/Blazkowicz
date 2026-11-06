@@ -63,6 +63,8 @@ footer b{color:#7fd6a9;font-weight:600}
 #dos-list .open .v{color:#9fd8bd;display:block;font-size:9px;white-space:normal;word-break:break-all}
 #dos-hint{margin-top:6px;color:#2e4a3b;letter-spacing:1px}
 #dos-hint.done{color:var(--accent)}
+#dos-act{margin-top:6px;padding:5px 8px;border:1px solid #14382a;color:#7fd6a9;cursor:pointer;letter-spacing:1px;text-align:center}
+#dos-act:hover{color:#d9ffe9;border-color:var(--on);text-shadow:0 0 6px rgba(0,255,156,.5)}
 #term{position:fixed;inset:0;z-index:30;background:#010503;font-size:13px;line-height:1.6;color:#8fdcb4;padding:clamp(16px,4vh,48px) clamp(14px,4vw,64px);overflow-y:auto;transition:opacity .5s}
 #term.off{opacity:0;pointer-events:none}
 #term.dark{background:#000}
@@ -120,7 +122,8 @@ CHAIN <b id="r-chain"></b>
 <div class="box">
 <div class="dtitle">SUBJECT DOSSIER &middot; <span id="dos-remain"></span></div>
 <div id="dos-list"></div>
-<div id="dos-hint">the subject resists interpretation. press a seal to read what it hides.</div>
+<div id="dos-act">START SCAN &middot; INTERROGATE THE SUBJECT</div>
+<div id="dos-hint">the subject is unscanned. this browser holds many facts about you; the grid can read them, but it will not do so without consent. the scan runs entirely inside this page: results are displayed here and nothing is transmitted, with one exception &mdash; your public address is echoed back by api64.ipify.org.</div>
 </div>
 </div>
 <div id="term">
@@ -142,7 +145,7 @@ function bootfail(m){
 }
 setTimeout(function(){
   if(!window.__blL)bootfail("game.js never ran. Check the Network tab for a 404: wrong path, file name case (servers are case-sensitive), or stale cache.");
-  else if(!window.__bl)bootfail("game.js ran but its payload did not execute. Open the Console tab: a Content-Security-Policy header is probably blocking eval. Remove it for this site or allow 'unsafe-eval'.");
+  else if(!window.__bl)bootfail("game.js ran but its payload did not execute. Open the Console tab for the error. The default build decrypts at runtime (eval): if the server sends a Content-Security-Policy, it must allow 'unsafe-eval' for this site - or rebuild with: python3 build.py --plain");
 },2500);
 </script>
 </body>
